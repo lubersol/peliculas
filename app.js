@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
     res.send('Hello world');
 });
 
+//ENDPOINTS PARTE PELICULAS
+
 //Endpoint para la ruta peliculas (todas)
 app.get('/peliculas', (req, res) => {
     res.json(peliculas);
@@ -50,6 +52,25 @@ app.get('/pelicula', (req, res) => {
     res.json(peliculaLista);
 });
 
+//ENDPOINTS PARTE PEDIDOS
+//El id nos llega por GET en la URL y los parametros por POST
+app.post('/request/order/:id', (req, res) => {
+    const pedido = [
+        { order: '101', id: '1', titulo: 'Match point' },
+        { order: '102', id: '2', titulo: 'Orgullo y prejuicio', director: 'Joe Wright', interprete: 'Keira Knightley' },
+        { order: '103', id: '3', titulo: 'Blade runner', director: 'Ridley Scott', interprete: 'Harrison Ford' },
+        { order: '104', id: '4', titulo: 'Infiltrados', director: 'Martin Scorsese', interprete: 'Leonardo Di Caprio' },
+        { order: '105', id: '5', titulo: 'Shame', director: 'Steve McQueen', interprete: 'Michael Fassbender' },
+        { order: '106', id: '6', titulo: 'Muerte entre las flores', director: 'Ethan Coen', interprete: 'Gabriel Byrne' },
+        { order: '107', id: '7', titulo: 'Pulp fiction', director: 'Quentin Tarantino', interprete: 'John Travolta' },
+        { order: '108', id: '8', titulo: 'Malditos bastardos', director: 'Quentin Tarantino', interprete: 'Christoph Waltz' },
+        { order: '109', id: '9', titulo: 'Tal como eramos', director: 'Sydney Pollack', interprete: 'Robert Redford' },
+        { order: '110', id: '10', titulo: 'Melancolia', director: 'Lars Von Triers', interprete: 'Kirsten Dunst' },
+        { order: '111', id: '11', titulo: '2046', director: 'Won Kar-Wai', interprete: 'Zhang Ziyi' },
+        { order: '112', id: '12', titulo: 'Canino', director: 'Yorgos Lanthimos', interprete: 'Mary Tsoni' }
+    ];
+    res.send('Order ID' + req.params.id + 'Pelicula' + req.body.pelicula);
+});
 
 
 
