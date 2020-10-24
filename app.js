@@ -9,6 +9,34 @@ app.use(express.json());
 //INSTANCIAMOS EL SERVIDOR
 app.listen(3000, () => console.log('Servidor levantado en 3000'));
 
+
+//USUARIOS
+
+
+//ENDPOINTS PARTE USUARIO 
+//generar mensaje que diga que ha accedido correctamente y mensaje que diga que es incorrecto en la response.
+//crear const usuarios = nombre password e id? rol?
+
+//Endpoint de alta de usuario (Post)
+const usuarios = [];
+const usuario = usuarios.push();
+app.post('/', (req, res) => {
+    //metodo push
+    res.send('');
+});
+
+//Endpoint de perfil de usuario (Get)
+
+
+//Endpoint de baja de usuario (Delete)
+
+
+//Endpoint de login de usuario (Update)
+
+
+
+//PELICULAS
+
 //Creamos array con objetos de peliculas
 
 const peliculas = [
@@ -28,7 +56,7 @@ const peliculas = [
 
 //HTTP://LOCALHOST:3000/ (escribimos eso en el la barra del navegador)
 app.get('/', (req, res) => {
-    res.send('Hello world');
+    res.send('Bienvenido a nuestro videoclub THE MOVIE DB');
 });
 
 //ENDPOINTS PARTE PELICULAS
@@ -52,7 +80,12 @@ app.get('/pelicula', (req, res) => {
     res.json(peliculaLista);
 });
 
+
+//PEDIDOS
+
+
 //ENDPOINTS PARTE PEDIDOS
+
 //El id nos llega por GET en la URL y los parametros por POST
 app.post('/request/order/:id', (req, res) => {
     const pedido = [
@@ -69,9 +102,11 @@ app.post('/request/order/:id', (req, res) => {
         { order: '111', id: '11', titulo: '2046', director: 'Won Kar-Wai', interprete: 'Zhang Ziyi' },
         { order: '112', id: '12', titulo: 'Canino', director: 'Yorgos Lanthimos', interprete: 'Mary Tsoni' }
     ];
-    res.send('Order ID' + req.params.id + 'Pelicula' + req.body.pelicula);
+    //Fecha de alquiler
+    const fecha = new Date();
+    const fechaDevolucion = setDay(fecha.getDay()+7);
+    res.send('Order ID: ' + req.params.order + 'Pelicula: ' + req.body.pelicula + fecha + 'Tienes que devolver la película: ' + fechaDevolucion);
 });
-
 
 
 
