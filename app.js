@@ -12,13 +12,9 @@ app.listen(3000, () => console.log('Servidor levantado en 3000'));
 
 //USUARIOS
 
-
-
 //ENDPOINTS PARTE USUARIO 
-//generar mensaje que diga que ha accedido correctamente y mensaje que diga que es incorrecto en la response.
-//crear const usuarios = nombre password e id? rol?
 
-//Endpoint de alta de usuario (Post)
+//Endpoint de alta de usuario (Post:create). Metodo push
 
 // app.post('/usuario', (req, res) => {
 //     //metodo push
@@ -34,26 +30,34 @@ app.listen(3000, () => console.log('Servidor levantado en 3000'));
 
 //Endpoint de perfil de usuario (Get)
 
+//hacer un if else para comprobar datos.
 // app.get('/', (req, res) => {
-//     res.send('');
+//     res.send('El usuario es correcto');
 // });
 
-//Endpoint de baja de usuario (Delete)
+//Endpoint de baja de usuario (Delete). Usar metodo splice?
 
 // app.delete('/', (req, res) => {
 //     res.send('');
 // });
 
-//Endpoint de login de usuario (Update)
-
-// app.update('/', (req, res) => {
+//Endpoint de login de usuario (Update)//metodo object.value ?
+// const users = {
+//     id: '1', name: 'Lucia', password:'gato13',
+//     id: '2', name: 'Maria', password: 'mapache10',
+//     id: '3', name: 'Sonia', password: 'perro30'
+//}
+// 
+// let user = users.find(item => item.id ===1);
+// console.log(user.name);
+// app.put('/login', (req, res) => {
 //     res.send('');
 // });
 
-// app.post('/saludo', function (req, res) {
+// app.post('/saludo', (req, res) => {
 
-// 	var nombre = req.body.nombre || '';
-// 	var saludo = '';
+// 	const nombre = req.body.nombre || '';
+// 	const saludo = '';
 
 // 	if (nombre != '')
 // 		saludo = "Hola " + nombre;
@@ -74,20 +78,19 @@ app.listen(3000, () => console.log('Servidor levantado en 3000'));
 //PELICULAS
 
 //Creamos array con objetos de peliculas
-
 const peliculas = [
-    { id: '1', titulo: 'Match point', director: 'Woody Allen', interpretes: 'Jonathan Rhys Meyers' },
-    { id: '2', titulo: 'Orgullo y prejuicio', director: 'Joe Wright', interpretes: 'Keira Knightley, Mathew McFayden' },
-    { id: '3', titulo: 'Blade runner', director: 'Ridley Scott', interpretes: 'Harrison Ford, Sean Young' },
-    { id: '4', titulo: 'Infiltrados', director: 'Martin Scorsese', interpretes: 'Leonardo Di Caprio, Jack Nicholson' },
-    { id: '5', titulo: 'Shame', director: 'Steve McQueen', interpretes: 'Michael Fassbender, Carey Mulligan' },
-    { id: '6', titulo: 'Muerte entre las flores', director: 'Ethan Coen', interpretes: 'Gabriel Byrne, John Turturro' },
-    { id: '7', titulo: 'Pulp fiction', director: 'Quentin Tarantino', interpretes: 'John Travolta, Uma Thurman' },
-    { id: '8', titulo: 'Malditos bastardos', director: 'Quentin Tarantino', interpretes: 'Christoph Waltz, Brad Pitt' },
-    { id: '9', titulo: 'Tal como eramos', director: 'Sydney Pollack', interpretes: 'Robert Redford, Barbra Streissand' },
-    { id: '10', titulo: 'Melancolia', director: 'Lars Von Triers', interpretes: 'Kirsten Dunst, Aleksander Skaargard' },
-    { id: '11', titulo: '2046', director: 'Won Kar-Wai', interpretes: 'Zhang Ziyi, Gong Li' },
-    { id: '12', titulo: 'Canino', director: 'Yorgos Lanthimos', interpretes: 'Mary Tsoni, Angeliki Papoulia' }
+    { id: '1', titulo: 'Match point', director: 'Woody Allen', interpretes: 'Jonathan Rhys Meyers', genero:'Drama' },
+    { id: '2', titulo: 'Orgullo y prejuicio', director: 'Joe Wright', interpretes: 'Keira Knightley, Mathew McFayden', genero:'Romance' },
+    { id: '3', titulo: 'Blade runner', director: 'Ridley Scott', interpretes: 'Harrison Ford, Sean Young', genero:'Ciencia ficción' },
+    { id: '4', titulo: 'Infiltrados', director: 'Martin Scorsese', interpretes: 'Leonardo Di Caprio, Jack Nicholson', genero:'Suspense' },
+    { id: '5', titulo: 'Shame', director: 'Steve McQueen', interpretes: 'Michael Fassbender, Carey Mulligan', genero:'Drama' },
+    { id: '6', titulo: 'Muerte entre las flores', director: 'Ethan Coen', interpretes: 'Gabriel Byrne, John Turturro', genero:'Suspense' },
+    { id: '7', titulo: 'Pulp fiction', director: 'Quentin Tarantino', interpretes: 'John Travolta, Uma Thurman', genero: 'Drama' },
+    { id: '8', titulo: 'Malditos bastardos', director: 'Quentin Tarantino', interpretes: 'Christoph Waltz, Brad Pitt', genero:'Aventura' },
+    { id: '9', titulo: 'Tal como eramos', director: 'Sydney Pollack', interpretes: 'Robert Redford, Barbra Streissand',genero:'Romance' },
+    { id: '10', titulo: 'Melancolia', director: 'Lars Von Triers', interpretes: 'Kirsten Dunst, Aleksander Skaargard', genero:'Drama' },
+    { id: '11', titulo: '2046', director: 'Won Kar-Wai', interpretes: 'Zhang Ziyi, Gong Li', genero:'Ciencia ficción' },
+    { id: '12', titulo: 'Canino', director: 'Yorgos Lanthimos', interpretes: 'Mary Tsoni, Angeliki Papoulia', genero:'Suspense' }
 ]
 
 //HTTP://LOCALHOST:3000/ (escribimos eso en el la barra del navegador)
@@ -109,21 +112,29 @@ app.get('/pelicula/:id', (req, res) => {
     res.json(pelicula);
 });
 
-//Endpoint para la ruta de queries
+//Endpoint para la ruta de queries (http://localhost:3000/pelicula?q=titulo)
 app.get('/pelicula', (req, res) => {
     let { q } = req.query;
     let peliculaLista = peliculas.filter(item => item.titulo.includes(q));
     res.json(peliculaLista);
 });
 
-//Buscar por actores
+//Buscar por actores (http://localhost:3000/actores?a=actor)
 app.get('/actores', (req, res) => {
-    let { p } = req.query;
-    let pelis = peliculas.filter(film => film.interpretes.includes(p));
+    let { a } = req.query;
+    let pelis = peliculas.filter(film => film.interpretes.includes(a));
     res.json(pelis);
 });
-//PEDIDOS
 
+//Buscar por género (http://localhost:3000/genero?g=Drama)
+app.get('/genero', (req, res) => {
+    let { g } = req.query;
+    let films = peliculas.filter(film => film.genero.includes(g));
+    res.json(films);
+});
+
+
+//PEDIDOS
 
 //ENDPOINTS PARTE PEDIDOS
 
@@ -143,12 +154,14 @@ app.post('/pedido/:order', (req, res) => {
         { order: '111', id: '11', titulo: '2046' },
         { order: '112', id: '12', titulo: 'Canino' }
     ];
-    let fecha = new Date();
-    let fechaDevolucion = fecha.setDate(fecha.getDate() + 7);
+
+    const fechaActual = new Date();
+    const fecha = new Date();
+    const fechaDevolucion = fecha.setDate(fecha.getDate() + 7);
     let numeroOrden = req.params;
     let peliElegida = req.body;
     //Fecha de alquiler
-    res.json(`Order ID: ${numeroOrden.order} Pelicula: ${peliElegida.titulo} Fecha de devolución: ${fecha}`);
+    res.json(`Order ID: ${numeroOrden.order} Pelicula: ${peliElegida} Fecha de alquiler:  ${fechaActual} Fecha de devolución: ${fecha}`);
 });
 
 
