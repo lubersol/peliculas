@@ -5,6 +5,8 @@ const app = express();
 const PORT = 3000;
 
 const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 //MIDDLEWARE
 app.use(express.json());
 
@@ -29,22 +31,22 @@ app.get('/usuarios', (req, res) => {
     res.json(users);
 });
 
-//Endpoint de alta de usuario (post, crear)
+//Endpoint de alta de usuario (post, crear)http://localhost:3000/usuarios (escribir en body los parametros)
 app.post('/usuarios', (req, res) => {
     const { id, name, password } = req.body;
-    users.push({"id":id, "name": name, "password": password});
-    req.json(users);
+    users.push({ "id": id, "name": name, "password": password });
+    res.json(users);
 });
 
-//Endpoint de login de usuario (put, Update)
-app.put('/usuarios:userId', (req, res) => {
-    let userId = req.params.id;
-    let userUpdate = users.find(userId => userId.id === id);
-    req.json(userUpdate);
+//Endpoint de login de usuario (put, Update) http://localhost:3000/usuarios (escribir en body el id)
+app.put('/usuarios', (req, res) => {
+    let userId = req.body.userId;
+    users.find(item => item === userId);
+    res.send('Estás logueado');
 });
 
-//Endpoint de baja de usuario (Delete)
-app.delete('/usuarios:userId', (req, res) => {
+//Endpoint de baja de usuario (Delete) (http://localhost:3000/usuarios/5)
+app.delete('/usuarios/:userId', (req, res) => {
     let userId = req.params.userId;
     //recorremos el array de users y eliminamos el usuario que coincida su id con el parámetro que estamos pasando
     for (let userIndex in users) {
