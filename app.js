@@ -1,153 +1,153 @@
 //PARA IMPORTAR E INVOCAR EL MODULO DE EXPRESS
 const express = require('express');
 const app = express();
+const router = express.Router();
+//ROUTER
+const routesUser = require('./components/user/router.js');
+const routesMovie = require('./components/movie/router.js');
+const routesOrder = require('./components/order/router.js');
 
+//PUERTO
 const PORT = 3000;
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
+//CONEXION A LA BASE DE DATOS
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/db-peliculas', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
+    //PARA VER SI ESTAMOS CONECTADOS A LA BD
+    .then(() => console.log('Mongoose connected'))
+    .catch((error) => console.log('Error Mongoose connection', error));
 
 //MIDDLEWARE
 app.use(express.json());
+app.use('/api/user', routesUser);
+app.use('/api/movie', routesMovie);
+app.use('/api/order', routesOrder);
+
+// //Middleware para tratar peticiones entrantes a modo de log 
+// app.use((req, res, next) => {
+//     console.log('He recibido la peticion');
+//     next();
+// });
+
+// //MIDDLEWARE CREADO POR MI 
+
+// const middleware2 = (req, res, next) => {
+//     console.log('Ha pasado por aqui ');
+//     next();
+// }
 
 //INSTANCIAMOS EL SERVIDOR
 app.listen(3000, () => console.log('Servidor levantado en 3000'));
 
 
-//USUARIOS
 
+// app.post('/user/login', (req, res) => {
+//     //Validamos que los datos son correctos
+//     const { name, password } = req.body;
 
-//Endpoint perfil de usuario (get, read)
-const users = [
+//     if (!name || !password) return res.json({ error: 'Fallo al introducir los datos' });
 
-    { id: '1', name: 'Laura', password: 'GatoNegro' },
-    { id: '2', name: 'Luisa', password: 'GatoBlanco' },
-    { id: '3', name: 'Javier', password: 'PerroVerde' },
-    { id: '4', name: 'Pedro', password: 'GatoAzul' },
-    { id: '5', name: 'Carlos', password: 'Carlangas' }
-];
+//     const data = usuarios.filter(e => e.usuario === usuario && e.password === password);
 
-app.get('/usuarios', (req, res) => {
-    res.json(users);
-});
+//     if (!data) return res.json({ error: 'Los datos introducidos no son correctos' });
 
-//Endpoint de alta de usuario (post, crear)http://localhost:3000/usuarios (escribir en body los parametros)
-app.post('/usuarios', (req, res) => {
-    const { id, name, password } = req.body;
-    users.push({ "id": id, "name": name, "password": password });
-    res.json(users);
-});
+//     const token = jwt.sign({ name: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 }); // expires in 24 hours
+//     res.json({ token: token, message: 'Login correcto' });
+// });
 
-//Endpoint de login de usuario (put, Update) http://localhost:3000/usuarios (escribir en body el id)
-app.put('/usuarios', (req, res) => {
-    let userId = req.body.userId;
-    users.find(item => item === userId);
-    res.send('Estás logueado');
-});
-
-//Endpoint de baja de usuario (Delete) (http://localhost:3000/usuarios/5)
-app.delete('/usuarios/:userId', (req, res) => {
-    let userId = req.params.userId;
-    //recorremos el array de users y eliminamos el usuario que coincida su id con el parámetro que estamos pasando
-    for (let userIndex in users) {
-        let user = users[userIndex];
-        if (user.id === userId) {
-            users.splice(userIndex, 1);
-            break;
-        }
-    }
-    res.json(users);
-});
+//Endpoint de baja de usuario (Delete) (http://localhost:3000/usuarios/5)Poner un while o do while.ARREGLAR
+// app.delete('/users/:userId', async (req, res) => {
+//     const id = req.params;
+//     const userId = await User.findOne(
+//         { _id: req.params._id }
+//     );
+//     res.json(userId);
+// });
 
 
 //PELICULAS
+//DEFINIR SCHEMA PARA PELICULAS
 
-//Creamos array con objetos de peliculas
-const peliculas = [
-    { id: '1', titulo: 'Match point', director: 'Woody Allen', interpretes: 'Jonathan Rhys Meyers', genero: 'Drama' },
-    { id: '2', titulo: 'Orgullo y prejuicio', director: 'Joe Wright', interpretes: 'Keira Knightley, Mathew McFayden', genero: 'Romance' },
-    { id: '3', titulo: 'Blade runner', director: 'Ridley Scott', interpretes: 'Harrison Ford, Sean Young', genero: 'Ciencia ficción' },
-    { id: '4', titulo: 'Infiltrados', director: 'Martin Scorsese', interpretes: 'Leonardo Di Caprio, Jack Nicholson', genero: 'Suspense' },
-    { id: '5', titulo: 'Shame', director: 'Steve McQueen', interpretes: 'Michael Fassbender, Carey Mulligan', genero: 'Drama' },
-    { id: '6', titulo: 'Muerte entre las flores', director: 'Ethan Coen', interpretes: 'Gabriel Byrne, John Turturro', genero: 'Suspense' },
-    { id: '7', titulo: 'Pulp fiction', director: 'Quentin Tarantino', interpretes: 'John Travolta, Uma Thurman', genero: 'Drama' },
-    { id: '8', titulo: 'Malditos bastardos', director: 'Quentin Tarantino', interpretes: 'Christoph Waltz, Brad Pitt', genero: 'Aventura' },
-    { id: '9', titulo: 'Tal como eramos', director: 'Sydney Pollack', interpretes: 'Robert Redford, Barbra Streissand', genero: 'Romance' },
-    { id: '10', titulo: 'Melancolia', director: 'Lars Von Triers', interpretes: 'Kirsten Dunst, Aleksander Skaargard', genero: 'Drama' },
-    { id: '11', titulo: '2046', director: 'Won Kar-Wai', interpretes: 'Zhang Ziyi, Gong Li', genero: 'Ciencia ficción' },
-    { id: '12', titulo: 'Canino', director: 'Yorgos Lanthimos', interpretes: 'Mary Tsoni, Angeliki Papoulia', genero: 'Suspense' }
-]
 
-//HTTP://LOCALHOST:3000/ (escribimos eso en el la barra del navegador)
-app.get('/', (req, res) => {
-    res.send('Bienvenido a nuestro videoclub THE MOVIE DB');
-});
 
-//ENDPOINTS PARTE PELICULAS
 
-//Endpoint para la ruta peliculas (todas)
-app.get('/peliculas', (req, res) => {
-    res.json(peliculas);
-});
+//para guardar todas las peliculas en la base de datos
 
-//Endpoint para la ruta de pelicula (id) http://localhost:3000/pelicula/10)
-app.get('/pelicula/:id', (req, res) => {
-    let { id } = req.params;
-    let pelicula = peliculas.find(pelicula => pelicula.id === id);
-    res.json(pelicula);
-});
+// for (let i = 0; i < peliculas.length; i++) {
+//     const movie = new Movie(peliculas[i]);
+//     await movie.save();
+// }
+//}
 
-//Endpoint para la ruta de queries (http://localhost:3000/pelicula?q=Match)
-app.get('/pelicula', (req, res) => {
-    let { q } = req.query;
-    let peliculaLista = peliculas.filter(item => item.titulo.includes(q));
-    res.json(peliculaLista);
-});
+//script().then();
 
-//Buscar por actores (http://localhost:3000/actores?a=Scarlet)
-app.get('/actores', (req, res) => {
-    let { a } = req.query;
-    let pelis = peliculas.filter(film => film.interpretes.includes(a));
-    res.json(pelis);
-});
 
-//Buscar por género (http://localhost:3000/genero?g=Drama)
-app.get('/genero', (req, res) => {
-    let { g } = req.query;
-    let films = peliculas.filter(film => film.genero.includes(g));
-    res.json(films);
-});
 
+
+
+// app.get('/movie', async (req, res) => {
+//     const query = {};
+//     if (req.query.titulo) query.titulo = req.query.titulo;
+//     if (req.query.director) query.director = req.query.director;
+//     if (req.query.interpretes) query.interpretes = req.query.interpretes;
+//     if (req.query.genero) query.genero = req.query.genero;
+//     console.log(query);
+//     const data = await Movie.find(query);
+//     res.json(data)
+// });
+
+
+//Endpoint para la ruta de pelicula (id) http://localhost:3000/movie/10)
+// app.get('/movie/:id', async (req, res) => {
+//     const id = req.params;
+//     const movieId = await Movie.findOne(
+//         { _id: req.params._id }
+//     );
+//     res.json(movieId);
+// });
+
+
+// app.post('/movie', async (req, res) => {
+//     const movie = new Movie(req.body);
+//     await movie.save();
+//     res.json(movie);
+// });
+
+// app.patch('/movie', async (req, res) => {
+//     const movie = await Movie.findOne({ _id: req.body._id })
+//     if (!movie) return res.json({ error: 'Elemento no encontrado' });
+//     movie.titulo = 'Match point';
+//     await movie.save();
+//     res.json(movie);
+// })
 
 //PEDIDOS
 
-//ENDPOINTS PARTE PEDIDOS
 
 //El id nos llega por GET en la URL y los parametros por POST
-app.post('/pedido/:order', (req, res) => {
-    const pedido = [
-        { order: '101', id: '1', titulo: 'Match point' },
-        { order: '102', id: '2', titulo: 'Orgullo y prejuicio' },
-        { order: '103', id: '3', titulo: 'Blade runner' },
-        { order: '104', id: '4', titulo: 'Infiltrados' },
-        { order: '105', id: '5', titulo: 'Shame' },
-        { order: '106', id: '6', titulo: 'Muerte entre las flores' },
-        { order: '107', id: '7', titulo: 'Pulp fiction' },
-        { order: '108', id: '8', titulo: 'Malditos bastardos' },
-        { order: '109', id: '9', titulo: 'Tal como eramos' },
-        { order: '110', id: '10', titulo: 'Melancolia' },
-        { order: '111', id: '11', titulo: '2046' },
-        { order: '112', id: '12', titulo: 'Canino' }
-    ];
+// app.post('/order', (req, res) => {
+//     if (!getUserById(req.body.idUsuario)) {
+//         res.status(400);
+//         return res.json({ error: 'El usuario no existe' })
+//     }
+//     const fechaEntrega = new Date();
+//     fechaEntrega.setDay(fechaEntrega.getDay() + 7);
+//     const order = {
+//         idPedido: getRandom(1, 1000),
+//         idUsuario: req.body.idUsuario,
+//         idPelicula: req.body.idPelicula,
+//         fechaPedido: new Date(),
+//         fechaEntrega: fechaEntrega,
+//     }
+//     orders.push(order)
+//     res.json(order);
+// });
 
-    const fechaActual = new Date();
-    const fecha = new Date();
-    const fechaDevolucion = fecha.setDate(fecha.getDate() + 7);
-    let numeroOrden = req.params;
-    let peliElegida = req.body;
-    //Fecha de alquiler
-    res.json(`Order ID: ${numeroOrden.order} Pelicula: ${peliElegida} Fecha de alquiler:  ${fechaActual} Fecha de devolución: ${fecha}`);
-});
 
 
 
