@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//Schema para pedido
 const OrderSchema = new mongoose.Schema({
     userId: {type: mongoose.ObjectId},
     movieId: {type: mongoose.ObjectId},

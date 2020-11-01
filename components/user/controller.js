@@ -1,35 +1,52 @@
 const User = require('./model');
 const jwt = require('jsonwebtoken');
+const router = require('./router');
 const secret = 'ksdjflsdjflsjflsdfjldsjf';
 
-//Middleware para tratar peticiones entrantes a modo de log 
-// app.use((req, res, next) => {
-//     console.log('He recibido la peticion');
-//     next();
-// });
+//Middleware para tratar peticiones entrantes a modo de log (validacion del token)
+router.use('/secure', (req, res, next)=>{
+const token = req.headers['authorization']
+if(!token){
+    res.status(401).send({
+        ok:false,
+        message:'Token inválido'
+    });
+}
+token=token.replace('Bearer ','')
 
+jwt.verify(token, 'password',(err, token)=>{
+    if(err) {
+        return res.status(401).send({
+            ok:false,
+            message:'Token inválido'
+        });
+    }else{
+        req.token=token
+        next()
+    }
+});
+});
+
+//Crear usuario nuevo
 module.exports.createUser = async (req, res) => {
     const user = new User(req.body);
     await user.save();
     res.json(user);
 };
 
-module.exports.getUsers = async (req, res) => {
-    const data = await User.find({});
+//Perfil de usuario
+module.exports.getUser = async (req, res) => {
+    const data = await User.find({ _id: req.params.id });
     res.json(data);
 };
 
-module.exports.getUser = async (req, res) => {
-    const data2 = await User.find({ _id: req.params.id });
-    res.json(data2);
-};
-
-
+//Baja de usuario
 module.exports.deleteUser = async (req, res) => {
     const userDelete = await User.deleteOne({ _id: req.params.id });
     res.json(userDelete);
 };
 
+//Login de usuario
 module.exports.login = async (req, res) => {
     const { name, password } = req.body;
     if (!name || !password) return res.json({ error: 'Fallo al introducir los datos' });

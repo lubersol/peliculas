@@ -1,4 +1,4 @@
-//Se meten los schemas
+//Schemas de las películas
 const mongoose = require('mongoose');
 const MovieSchema = new mongoose.Schema({
     titulo: { type: String },
