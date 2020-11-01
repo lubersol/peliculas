@@ -1,13 +1,18 @@
 const Movie = require('./model');
 
 module.exports.getMovies = async (req, res) => {
-    const data = await Movie.find({});
-    res.json(data);
+    const query ={};
+    if(req.query.genero) query.genero=req.query.genero;
+    if(req.query.titulo) query.titulo=req.query.titulo;
+    if(req.query.director) query.director=req.query.director;
+    if(req.query.interpretes) query.interpretes=req.query.interpretes;
+    const search = await Movie.find(query);
+    res.json(search);
 };
 
 module.exports.getMovie = async (req, res) => {
-    const data2 = await Movie.find({ _id: req.params.id });
-    res.json(data2);
+    const byId = await Movie.find({ _id: req.params.id });
+    res.json(byId);
 };
 
 module.exports.createMovie = async (req, res) => {
@@ -16,12 +21,7 @@ module.exports.createMovie = async (req, res) => {
     res.json(movie);
 };
 
-module.exports.filterByGenre = async (req, res) => {
-    const genre = await Movie.filter((elem) => {
-        if (elem.genero === req.query.genero) return elem
-    });
-    res.json(genre);
-};
+
 
 
 

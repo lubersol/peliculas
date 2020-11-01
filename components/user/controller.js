@@ -26,8 +26,7 @@ module.exports.getUser = async (req, res) => {
 
 
 module.exports.deleteUser = async (req, res) => {
-    const userDelete = await User.remove({ _id: req.params.id });
-    //método o función para eliminar el usuario
+    const userDelete = await User.deleteOne({ _id: req.params.id });
     res.json(userDelete);
 };
 

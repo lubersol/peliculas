@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
+//const constante = require('../constant.js');
 
-const CONS = {
-    ROLES:{
-        ADMIN:'ADMIN',
-        CLIENT:'CLIENT'
-    }
- }
+//  const CONS = {
+//      ROLES:{
+//          ADMIN:'ADMIN',
+//          CLIENT:'CLIENT'
+//      }
+//   }
 
 module.exports = mongoose.model('User', new mongoose.Schema({
     name: { type: String },
     password: { type: String },
     email: { type: String },
-    role: { type: String, default: 'USER', enum: Object.values(CONS.ROLES) },
+    //role: { type: String, default: 'USER', enum: Object.values(CONS.ROLES) },
 }));
