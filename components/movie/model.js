@@ -1,5 +1,6 @@
-//Schemas de las películas
 const mongoose = require('mongoose');
+
+//Schemas de las películas
 const MovieSchema = new mongoose.Schema({
     titulo: { type: String },
     director: { type: String },

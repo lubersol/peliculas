@@ -2,11 +2,11 @@ const Movie = require('./model');
 
 /*Todas las películas y búsqueda en Movies por género, título, director e intérpretes*/
 module.exports.getMovies = async (req, res) => {
-    const query ={};
-    if(req.query.genero) query.genero=req.query.genero;
-    if(req.query.titulo) query.titulo=req.query.titulo;
-    if(req.query.director) query.director=req.query.director;
-    if(req.query.interpretes) query.interpretes=req.query.interpretes;
+    const query = {};
+    if (req.query.genero) query.genero = req.query.genero;
+    if (req.query.titulo) query.titulo = req.query.titulo;
+    if (req.query.director) query.director = req.query.director;
+    if (req.query.interpretes) query.interpretes = req.query.interpretes;
     const search = await Movie.find(query);
     res.json(search);
 };

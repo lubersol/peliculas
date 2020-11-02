@@ -26,7 +26,7 @@ mongoose.connect('mongodb://localhost:27017/db-peliculas', {
 app.use(express.json());
 app.use('/api/user', routesUser);
 app.use('/api/movie', routesMovie);
-app.use('/api/order', routesOrder);   
+app.use('/api/order', routesOrder);
 
 app.listen(3000, () => console.log('Servidor levantado en 3000'));
 
