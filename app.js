@@ -22,27 +22,13 @@ mongoose.connect('mongodb://localhost:27017/db-peliculas', {
     .then(() => console.log('Mongoose connected'))
     .catch((error) => console.log('Error Mongoose connection', error));
 
-//MIDDLEWARE
+//MIDDLEWARE PARA RUTAS
 app.use(express.json());
 app.use('/api/user', routesUser);
 app.use('/api/movie', routesMovie);
-app.use('/api/order', routesOrder);
+app.use('/api/order', routesOrder);   
 
 app.listen(3000, () => console.log('Servidor levantado en 3000'));
-
-
-// //Middleware para tratar peticiones entrantes a modo de log 
-// app.use((req, res, next) => {
-//     console.log('He recibido la peticion');
-//     next();
-// });
-
-// //MIDDLEWARE CREADO POR MI 
-
-// const middleware2 = (req, res, next) => {
-//     console.log('Ha pasado por aqui ');
-//     next();
-// }
 
 
 
