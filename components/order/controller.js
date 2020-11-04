@@ -9,7 +9,7 @@ module.exports.createOrder = async (req, res) => {
     res.json(order);
 };
 
-// const orders = Order.find({}).populate('userId');
+const orders = Order.find({}).populate('userId');
 
 
 

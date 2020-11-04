@@ -1,9 +1,9 @@
 const User = require('./model');
 const jwt = require('jsonwebtoken');
-const router = require('./router');
 const secret = 'ksdjflsdjflsjflsdfjldsjf';
+const bcrypt = require('bcrypt');
 
-//Crear usuario nuevo
+//Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
     try {
         const user = new User(req.body);
@@ -19,7 +19,6 @@ module.exports.createUser = async (req, res) => {
         });
     }
 };
-
 //Perfil de usuario
 module.exports.getUser = async (req, res) => {
     try {
@@ -56,7 +55,6 @@ module.exports.login = async (req, res) => {
     const token = jwt.sign({ name: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
     res.json({ token: token, message: 'Login correcto' });
 
-
     //Middleware para validar mediante token)
     jwt.verify(token, 'secret', function (err, token) {
         if (err) {
@@ -70,5 +68,9 @@ module.exports.login = async (req, res) => {
         }
     })
 }
+        
+
+       
 
 
+       
