@@ -48,11 +48,14 @@ module.exports.deleteUser = async (req, res) => {
 
 //Login de usuario + generar token
 module.exports.login = async (req, res) => {
-    const { name, password } = req.body;
-    if (!name || !password) return res.json({ error: 'Fallo al introducir los datos' });
-    const data = User.find(e => e.name === name && e.password === password);
+
+    const { email, password } = req.body;
+    if (!email || !password) return res.json({ error: 'Fallo al introducir los datos' });
+
+    const data = User.find(e => e.email === email && e.password === password);
     if (!data) return res.json({ error: 'Los datos introducidos no son correctos' });
-    const token = jwt.sign({ name: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
+    
+    const token = jwt.sign({ email: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
     res.json({ token: token, message: 'Login correcto' });
 
     //Middleware para validar mediante token)
