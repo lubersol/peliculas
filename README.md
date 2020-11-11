@@ -1,5 +1,6 @@
 # API Películas
 ![Screenshot](video.png)
+
 **1 - Introducción:**
 
 API que simula un videoclub creada en backend con **Nodejs, Express y MongoDB**, haciendo uso de **Git, ES6, Postman, Mongoose y JSON Web Token**.
