@@ -22,7 +22,9 @@ app.use('/api/order', routesOrder);
 app.listen(PORT, () => console.log('Servidor levantado en '+PORT));
 
 
-
+['unhandledRejection', 'uncaughtException'].forEach(event => process.on(event, (err) => {
+    console.error(`unhandled error: ${err.stack || err}`);
+}));
 
 
 
