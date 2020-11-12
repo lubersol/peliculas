@@ -13,12 +13,9 @@ const PORT = 3000;
 
 //CONEXION A LA BASE DE DATOS
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/db-peliculas', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-})
+const MongoURI = process.env.MongoURI || 'mongodb://localhost:27017/heroku-mongo'
+mongoose.connect(MongoURI, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('connected to Mongodb: ' + MongoURI));
     //PARA VER SI ESTAMOS CONECTADOS A LA BD
     .then(() => console.log('Mongoose connected'))
     .catch((error) => console.log('Error Mongoose connection', error));
