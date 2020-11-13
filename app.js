@@ -12,6 +12,11 @@ const routesOrder = require('./components/order/router.js');
 //PUERTO
 const PORT = process.env.PORT || 3000;
 
+// Ruta por defecto con mensaje de bienvenida en formato JSON.
+app.get('*', (req, res) => res.status(200).send({
+    message: 'Bienvenido a nuestra clínica dental'
+}));
+
 //MIDDLEWARE PARA RUTAS
 app.use(express.json());
 app.use('/api/user', routesUser);
