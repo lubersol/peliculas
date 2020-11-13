@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 // Ruta por defecto con mensaje de bienvenida en formato JSON.
 app.get('*', (req, res) => res.status(200).send({
-    message: 'Bienvenido a nuestra clínica dental'
+    message: 'Bienvenido a nuestro videoclub',
 }));
 
 //MIDDLEWARE PARA RUTAS
