@@ -1,7 +1,6 @@
 const User = require('./model');
 const jwt = require('jsonwebtoken');
 const secret = 'ksdjflsdjflsjflsdfjldsjf';
-const bcrypt = require('bcrypt');
 
 //Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
@@ -47,33 +46,43 @@ module.exports.deleteUser = async (req, res) => {
 };
 
 //Login de usuario + generar token
-module.exports.login = async (req, res) => {
-
-    const { email, password } = req.body;
-    if (!email || !password) return res.json({ error: 'Fallo al introducir los datos' });
-
-    const data = User.find(e => e.email === email && e.password === password);
-    if (!data) return res.json({ error: 'Los datos introducidos no son correctos' });
-    
-    const token = jwt.sign({ email: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
-    res.json({ token: token, message: 'Login correcto' });
-
-    //Middleware para validar mediante token)
-    jwt.verify(token, 'secret', function (err, token) {
-        if (err) {
-            return res.status(401).send({
-                ok: false,
-                message: 'Token inválido'
-            });
+module.exports.login = async (req, res, next) => {
+    try {
+        const data = await User.findOne({ email: req.body.email });
+        if (data) {
+            const check = bcript.compareSync(req.body.password, data.password);
+            if (check) {
+                res.json({ success: token(data) });
+            } else {
+                res.json({ error: 'Datos introducidos incorrectamente' })
+            }
         } else {
-            req.token = token
-            next()
+            res.json({ error: 'Los datos que ha introducido no son correctos' })
         }
-    })
-}
-        
+    } catch (error) {
+        console.log(error);
+    }
+    next();
+};
 
-       
+const token = jwt.sign({ email: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
+res.json({ token: token, message: 'Login correcto' });
+
+//Middleware para validar mediante token)
+jwt.verify(token, 'secret', function (err, token) {
+    if (err) {
+        return res.status(401).send({
+            ok: false,
+            message: 'Token inválido'
+        });
+    } else {
+        req.token = token
+        next()
+    }
+})
+    
 
 
-       
+
+
+

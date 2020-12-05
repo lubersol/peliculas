@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required:[true, 'el password es necesario'] },
     email: { type: String, required:[true, 'El correo es necesario'],unique:true },
     role: { type: String, default: 'USER', enum: Object.values(CONS.ROLES) }
-},//Este código es para que NO devuelva la password cuando pedimos un usuario por id al servidor
+},
+//Este código es para que NO devuelva la password cuando pedimos un usuario por id al servidor
     {
         toJSON: {
             transform: function (doc, ret) {
