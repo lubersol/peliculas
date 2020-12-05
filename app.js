@@ -41,7 +41,7 @@ app.use('/api/order', routesOrder);
 
 //IMPORTAR MONGOOSE Y CONEXION BBDD
 const mongoose= require ('mongoose');
-const MongoURI = process.env.MongoURI || 'mongodb://localhost:27017/heroku-mongo'
+const MongoURI = 'mongodb+srv://lucia:eac9p1OWTiqifoyj@heroku-mongo-mi-atlas.xabhu.mongodb.net/heroku-mongo-atlas?retryWrites=true&w=majority' || 'mongodb://localhost:27017/heroku-mongo'
 mongoose.connect(MongoURI, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false })
     .then(() => console.log('connected to Mongodb: ' + MongoURI))
     .catch(e=>console.error('mongoose erroneo ', e))
