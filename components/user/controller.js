@@ -1,13 +1,21 @@
 const User = require('./model');
 const jwt = require('jsonwebtoken');
 const secret = 'ksdjflsdjflsjflsdfjldsjf';
+const bcrypt = require('bcryptjs');
 
 //Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
+    
+    const nuevoUsuario = { 
+        name:req.body.name,
+        email:req.body.email,
+        password:bcrypt.hashSync(req.body.password, 9)
+    };
     try {
-        req.body.password = bcrypt.hashSync(req.body.password, 9);
-        const user = new User(req.body);
+        const user = new User(nuevoUsuario);
+        console.log(user);
         await user.save();
+        console.log(nuevoUsuario);
         res.json({
             user,
             message: 'Usuario creado correctamente'
@@ -51,7 +59,7 @@ module.exports.login = async (req, res, next) => {
     try {
         const data = await User.findOne({ email: req.body.email });
         if (data) {
-            const check = bcript.compareSync(req.body.password, data.password);
+            const check = bcrypt.compareSync(req.body.password, data.password);
             if (check) {
                 const token = jwt.sign({ email: data.id, password: data.password }, secret, { expiresIn: 60 * 60 * 24 });
                 res.json({ token: token, message: 'Login correcto' });

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const bcrypt = require('bcrypt');
+
 // let uniqueValidator = require('mongoose-unique-validator');
 
 const CONS = {
@@ -16,15 +16,7 @@ const UserSchema = new mongoose.Schema({
     role: { type: String, default: 'USER', enum: Object.values(CONS.ROLES) }
 });
 
-//Este código es para que NO devuelva la password cuando pedimos un usuario por id al servidor
-//     {
-//         toJSON: {
-//             transform: function (doc, ret) {
-//                 delete ret.password
-//                 return ret;
-//             }
-//         }
-//     });
+
 
 // //Middleware para encriptar la contraseña antes de guardar usuario
 //  UserSchema.pre('save', async function (next) {
