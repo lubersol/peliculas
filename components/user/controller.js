@@ -63,8 +63,7 @@ module.exports.login = async (req, res, next) => {
         console.log(error);
     }
     next();
-};
-
+    
 const token = jwt.sign({ email: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
 res.json({ token: token, message: 'Login correcto' });
 
@@ -80,7 +79,7 @@ jwt.verify(token, 'secret', function (err, token) {
         next()
     }
 })
-    
+};    
 
 
 

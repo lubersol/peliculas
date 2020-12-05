@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required:[true, 'El correo es necesario'],unique:true },
     role: { type: String, default: 'USER', enum: Object.values(CONS.ROLES) }
 },
+
 //Este código es para que NO devuelva la password cuando pedimos un usuario por id al servidor
     {
         toJSON: {
@@ -24,6 +25,7 @@ const UserSchema = new mongoose.Schema({
             }
         }
     });
+
 //Middleware para encriptar la contraseña antes de guardar usuario
  UserSchema.pre('save', async function (next) {
      try {
@@ -39,6 +41,7 @@ const UserSchema = new mongoose.Schema({
          console.log(error);
      }
  });
+
 //Plugin de validación única
 UserSchema.plugin(uniqueValidator, {
     message: '{PATH} debe de ser único'
