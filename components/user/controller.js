@@ -5,6 +5,7 @@ const secret = 'ksdjflsdjflsjflsdfjldsjf';
 //Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
     try {
+        req.body.password = bcrypt.hashSync(req.body.password, 9);
         const user = new User(req.body);
         await user.save();
         res.json({
@@ -52,7 +53,10 @@ module.exports.login = async (req, res, next) => {
         if (data) {
             const check = bcript.compareSync(req.body.password, data.password);
             if (check) {
+                const token = jwt.sign({ email: data.id, password: data.password }, secret, { expiresIn: 60 * 60 * 24 });
+                res.json({ token: token, message: 'Login correcto' });
                 res.json({ success: token(data) });
+
             } else {
                 res.json({ error: 'Datos introducidos incorrectamente' })
             }
@@ -62,24 +66,21 @@ module.exports.login = async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-    next();
-    
-const token = jwt.sign({ email: data.id, password: password }, secret, { expiresIn: 60 * 60 * 24 });
-res.json({ token: token, message: 'Login correcto' });
 
-//Middleware para validar mediante token)
-jwt.verify(token, 'secret', function (err, token) {
-    if (err) {
-        return res.status(401).send({
-            ok: false,
-            message: 'Token inválido'
-        });
-    } else {
-        req.token = token
-        next()
-    }
-})
-};    
+
+    //Middleware para validar mediante token)
+    jwt.verify(token, 'secret', function (err, token) {
+        if (err) {
+            return res.status(401).send({
+                ok: false,
+                message: 'Token inválido'
+            });
+        } else {
+            req.token = token
+        }
+    })
+    next();
+};
 
 
 
