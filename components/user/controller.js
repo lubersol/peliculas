@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const secret = 'ksdjflsdjflsjflsdfjldsjf';
 const bcrypt = require('bcryptjs');
 
+
 //Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
     
@@ -11,6 +12,7 @@ module.exports.createUser = async (req, res) => {
         email:req.body.email,
         password:bcrypt.hashSync(req.body.password, 9)
     };
+
     try {
         const user = new User(nuevoUsuario);
         console.log(user);
@@ -27,6 +29,7 @@ module.exports.createUser = async (req, res) => {
         });
     }
 };
+
 //Perfil de usuario
 module.exports.getUser = async (req, res) => {
     try {
@@ -74,22 +77,21 @@ module.exports.login = async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-
-
-    //Middleware para validar mediante token)
-    jwt.verify(token, 'secret', function (err, token) {
-        if (err) {
-            return res.status(401).send({
-                ok: false,
-                message: 'Token inválido'
-            });
-        } else {
-            req.token = token
-        }
-    })
     next();
+    
 };
-
+    //Middleware para validar mediante token
+module.exports.verif = jwt.verify(token, 'secret', function (err, token) {
+    if (err) {
+        return res.status(401).send({
+            ok: false,
+            message: 'Token inválido'
+        });
+    } else {
+        req.token = token
+    }
+    next();
+})
 
 
 

@@ -13,14 +13,6 @@ const routesOrder = require('./components/order/router.js');
 const cors = require('cors');
 app.use(cors());
 
-// app.use(function (req, res, next) { //para evitar el error CORS
-//     res.header("Access-Control-Allow-Origin", "*"); //permite hacer peticiones desde todos los orígenes
-//     res.header("Access-Control-Allow-Headers", "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"); //permite peticiones con las cabeceras enumeradas
-//     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-//     res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-//     next();
-// });
-
 
 //PUERTO
 const PORT = process.env.PORT || 3000;
