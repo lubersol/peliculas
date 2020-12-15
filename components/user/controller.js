@@ -1,6 +1,6 @@
 const User = require('./model');
-const jwt = require('jsonwebtoken');
-const secret = 'ksdjflsdjflsjflsdfjldsjf';
+let jwt = require('jsonwebtoken');
+let secret = 'ksdjflsdjflsjflsdfjldsjf';
 const bcrypt = require('bcryptjs');
 
 
@@ -81,17 +81,13 @@ module.exports.login = async (req, res, next) => {
     
 };
     //Middleware para validar mediante token
-module.exports.verif = jwt.verify(token, 'secret', function (err, token) {
-    if (err) {
-        return res.status(401).send({
-            ok: false,
-            message: 'Token inválido'
-        });
-    } else {
-        req.token = token
+module.exports.verif = (token) =>{
+    try{
+        return jwt.verify(token, secret);
+    }catch(e){
+return null;
     }
-    
-})
+};
 
 
 
