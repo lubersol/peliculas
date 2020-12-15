@@ -90,7 +90,7 @@ module.exports.verif = jwt.verify(token, 'secret', function (err, token) {
     } else {
         req.token = token
     }
-    next();
+    
 })
 
 
