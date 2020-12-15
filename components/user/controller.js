@@ -6,11 +6,11 @@ const bcrypt = require('bcryptjs');
 
 //Crear usuario nuevo (el email no puede ser ficticio)
 module.exports.createUser = async (req, res) => {
-    
-    const nuevoUsuario = { 
-        name:req.body.name,
-        email:req.body.email,
-        password:bcrypt.hashSync(req.body.password, 9)
+
+    const nuevoUsuario = {
+        name: req.body.name,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 9)
     };
 
     try {
@@ -31,18 +31,18 @@ module.exports.createUser = async (req, res) => {
 };
 
 //Perfil de usuario
-module.exports.getUser = async (req, res) => {
-    try {
-        const data = await User.findById({ _id: req.params.id });
-        res.json(data);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Error al acceder al usuario'
-        });
+module.exports.getUser = async (userId) => {
+    return await User.findOne({ _id: userId });
+}
+let getUserData = async (req, res) => {
+    let query = {};
+    let users = null;
+    if (!!req.body.email) query.email = req.body.email;
+    if (query.email !== undefined) {
+        users = await User.findOne(query);
     }
+    return users;
 };
-
 //Baja de usuario
 module.exports.deleteUser = async (req, res) => {
     try {
@@ -60,32 +60,29 @@ module.exports.deleteUser = async (req, res) => {
 //Login de usuario + generar token
 module.exports.login = async (req, res, next) => {
     try {
-        const data = await User.findOne({ email: req.body.email });
-        if (data) {
-            const check = bcrypt.compareSync(req.body.password, data.password);
-            if (check) {
-                const token = jwt.sign({ email: data.id, password: data.password }, secret, { expiresIn: 60 * 60 * 24 });
-                res.json({ token: token, message: 'Login correcto' });
-                res.json({ success: token(data) });
-
-            } else {
-                res.json({ error: 'Datos introducidos incorrectamente' })
-            }
+        const password = req.body.password;
+        const data = await getUserData(req, res);
+        if (data && data.password === password) {
+            const token = jwt.sign({ email: data.id, password: data.password }, secret, { expiresIn: 60 * 60 * 24 });
+            res.json({ token: token, message: 'Login correcto' });
+            res.json({ success: token(data) });
+            result = true;
         } else {
-            res.json({ error: 'Los datos que ha introducido no son correctos' })
+            res.json({ error: 'Datos introducidos incorrectamente' })
         }
-    } catch (error) {
-        console.log(error);
+
+    } catch {
+        res.status(400).json({ message: 'error' })
     }
     next();
-    
+
 };
-    //Middleware para validar mediante token
-module.exports.verif = (token) =>{
-    try{
+//Middleware para validar mediante token
+module.exports.verif = (token) => {
+    try {
         return jwt.verify(token, secret);
-    }catch(e){
-return null;
+    } catch (e) {
+        return null;
     }
 };
 
